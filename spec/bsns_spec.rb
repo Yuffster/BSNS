@@ -43,33 +43,33 @@ describe BSNS do
 		buzz.fizzles.length.should  == 2
 		buzz.fizzles[0].name.should == "Fazzy Fazz Fazz"
 		buzz.fizzles[1].name.should == "Fuzzy Wuzzy"
-    end
+	end
 
-    it "should load self-referential associations" do
-    	fizz = Fizzle.load 'fizz'
-    	fizz.fizzles.length.should  == 1
-    	fizz.fizzles[0].name.should == "Fazzy Fazz Fazz"
-    end
+	it "should load self-referential associations" do
+		fizz = Fizzle.load 'fizz'
+		fizz.fizzles.length.should  == 1
+		fizz.fizzles[0].name.should == "Fazzy Fazz Fazz"
+	end
 
-    it "should load self-referential associations with extra keys" do
-    	buzz = Buzzle.load 'buzz'
-    	buzz.friendships.length.should   == 2
-    	buzz.friendships[1].name.should  == 'Bizzy Bizz Bizz'
-    	buzz.friendships[0].name.should  == 'Bazzy Bazz Bazz'
-    	buzz.friendships[1].years.should == 4
-    	buzz.friendships[0].years.should == 5
-    end
+	it "should load self-referential associations with extra keys" do
+		buzz = Buzzle.load 'buzz'
+		buzz.friendships.length.should   == 2
+		buzz.friendships[1].name.should  == 'Bizzy Bizz Bizz'
+		buzz.friendships[0].name.should  == 'Bazzy Bazz Bazz'
+		buzz.friendships[1].years.should == 4
+		buzz.friendships[0].years.should == 5
+	end
 
-    it "should load foreign associations with custom name" do
-    	buzz = Buzzle.load 'buzz'
-    	buzz.enemies.length.should  == 2
-    	buzz.enemies[0].name.should == 'Fizzy Fizz'
-    end
+	it "should load foreign associations with custom name" do
+		buzz = Buzzle.load 'buzz'
+		buzz.enemies.length.should  == 2
+		buzz.enemies[0].name.should == 'Fizzy Fizz'
+	end
 
-    it "should load foreign associations with extra linking field" do
-    	buzz = Buzzle.load 'buzz'
-    	buzz.enemies[0].reason.should == "Wasn't fizzy enough; ruined soda."
-    	buzz.enemies[1].reason.should == "Got all over the rest of the clothes in the dryer."
+	it "should load foreign associations with extra linking field" do
+		buzz = Buzzle.load 'buzz'
+		buzz.enemies[0].reason.should == "Wasn't fizzy enough; ruined soda."
+		buzz.enemies[1].reason.should == "Got all over the rest of the clothes in the dryer."
 	end
 
 	it "should load associations in key/value hash form" do
