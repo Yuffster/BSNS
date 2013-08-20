@@ -1,0 +1,13 @@
+name: Buzz Buzz Buzz
+age: 25
+friendships:
+  bazz: 5 # Bazz has been friends with Buzz for 5 years.
+  bizz: 4 # Bizz has been friends with Buzz for 4 years.
+fizzles:
+  - fazz
+  - fuzz
+enemies:
+  fizz: Wasn't fizzy enough; ruined soda.
+  fuzz: Got all over the rest of the clothes in the dryer.
+opinions:
+  - fazz: "Hasn't done anything particularly annoying, yet."
