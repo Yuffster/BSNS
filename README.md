@@ -141,6 +141,8 @@ peanut_butter:
   description: A spread of peanut butter.
 ```
 
+### Default Values
+
 Now you can do fun stuff with your models.  Let's add a method to Sandwich to
 automatically price sandwiches at a 150% markup.
 
@@ -169,14 +171,14 @@ realize he doesn't need you to be his web developer).
 You'd give Jim a new YML file called `sandwiches/_defaults.yml`.  It's what it
 says on the tin: default values for all sandwiches.
 
-```yml
+```yaml
 price_modifier: 1.5
 description: No description available. :(
 ```
 
 And add a new sandwich file, `sandiwches/pbnb.yml`:
 
-```yml
+```yaml
 title: Peanut Butter and Banana
 ingredients:
   banana: 1
