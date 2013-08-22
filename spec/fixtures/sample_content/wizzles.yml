@@ -1,0 +1,27 @@
+_defaults:
+  name: ???
+  powers:
+    - mysteriousness
+  weaknesses:
+    - ambiguity
+  species: human
+wizzy:
+  name: Whizz
+  powers:
+    - levitation
+  weaknesses:
+    - ice cream
+wazzy:
+  name: Whazzy
+  powers:
+    - unusually bushy eyebrows
+    - cake vision glasses
+  weaknesses:
+    - bullets
+wuzzy:
+  name: Whuzzy
+  powers:
+    - flight
+  weaknesses:
+    - public bathrooms
+  species: horse

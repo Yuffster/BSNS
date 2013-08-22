@@ -4,7 +4,7 @@ BSNS.configure :content_path => File.dirname(__FILE__) + '/fixtures/sample_conte
 
 class Buzzle < BSNS::Base
 
-	attr_accessor :name, :age
+	attr_accessor :name, :age, :alignment
 
 	has_many :buzzles, :as => :friendships, :with => :years
 	has_many :fizzles
@@ -13,15 +13,21 @@ class Buzzle < BSNS::Base
 
 end
 
+class Wizzle < BSNS::Base
+
+	attr_accessor :name, :powers, :species, :weaknesses
+
+	acts_as_collection
+
+end
+
 class Fizzle < BSNS::Base
 	
 	attr_accessor :name
 
-	has_many :fizzles
+	content_path 'custom_dir_for_fizzles'
 
-	def self.relative_path
-		'custom_dir_for_fizzles'
-	end
+	has_many :fizzles
 
 end
 
@@ -76,6 +82,33 @@ describe BSNS do
 		buzz = Buzzle.load 'buzz'
 		buzz.opinions.length.should == 1
 		buzz.opinions[0].opinion.should == "Hasn't done anything particularly annoying, yet."
+	end
+
+	it "should load defaults from the _defaults.yml file" do
+		buzz = Buzzle.load 'buzz'
+		buzz.alignment.should == "lawful neutral"
+	end
+
+	it "should allow for overrides of default values" do
+		bizz = Buzzle.load 'bizz'
+		bizz.alignment.should == "chaotic neutral"
+	end
+
+	it "should load an item from a single-file collection" do
+		wizz = Wizzle.load 'wizzy'
+		wizz.name.should == "Whizz"
+		wizz.powers.length.should == 1
+		wizz.weaknesses.length.should == 1
+	end
+
+	it "should preload defaults from a single-file collection" do
+		wizz = Wizzle.load 'wizzy'
+		wizz.species.should == "human"
+	end
+
+	it "should allow override of preloaded defaults" do
+		wuzz = Wizzle.load 'wuzzy'
+		wuzz.species.should == "horse"
 	end
 
 end

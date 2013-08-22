@@ -16,6 +16,10 @@ module BSNS
 		end
 	end
 
+	def acts_as_collection
+		set_v :single_file, true
+	end
+
 	def self.configure opts
 		@@config = opts
 	end
@@ -28,10 +32,10 @@ module BSNS
 
 		extend BSNS
 
-		attr_accessor :load_path
-
 		def initialize data={}
-			set_defaults
+			get_defaults.each do |k,v|
+				data[k] ||= v
+			end
 			data.each do |k,v|
 				accessor = "#{k}="
 				if respond_to? accessor
@@ -40,6 +44,35 @@ module BSNS
 					instance_variable_set "@#{k}", v
 				end
 			end
+		end
+
+		def get_defaults
+			data = get_v :defaults
+			unless data
+				data = self.class.load_or_nil "_defaults"
+				set_v :defaults, data
+			end
+			data || {}
+		end
+
+		def get_v k
+			self.class.get_v k
+		end
+
+		def set_v k, v
+			self.class.set_v k, v
+		end
+
+		def self.get_v k
+			begin
+				return class_variable_get "@@#{k}"
+			rescue
+				return nil
+			end
+		end
+
+		def self.set_v k, v
+			class_variable_set "@@#{k}", v
 		end
 
 		def self.class
@@ -51,19 +84,41 @@ module BSNS
 		end
 
 		def self.relative_path
-			self.class.name.to_s.downcase.pluralize
+			get_v(:relative_path) || self.class.name.to_s.downcase.pluralize
 		end
 
-		def set_defaults
+		def self.content_path p
+			set_v :relative_path, p
+		end
+
+		def self.load_data file
+			return load_from_collection file if get_v :single_file
+			data = {}
+			data['load_path'] = file
+			path = (root_path+relative_path.gsub(/\/$/, '')+'/')+file.to_s+'.yml'
+			throw "File not found: #{path}" unless File.exists? path
+			YAML.load_file path
 		end
 
 		def self.load file
-			data = {}
-			data['load_path'] = file
-			data = YAML.load_file root_path +
-			                      relative_path.gsub(/\/$/, '')+'/'+
-			                      file.to_s+'.yml'
+			data = load_data file
 			self.new data
+		end
+
+		def self.load_or_nil file
+			begin
+				load_data file
+			rescue
+				return nil
+			end
+		end
+
+		def self.load_from_collection f
+			unless get_v :data
+				data = YAML.load_file (root_path + relative_path + '.yml')
+				set_v :data, data
+			end
+			get_v(:data)[f.to_s]
 		end
 
 		def collection_from_array arr, model, extra_key = nil
