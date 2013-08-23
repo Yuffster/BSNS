@@ -81,7 +81,7 @@ module BSNS
 
 		def self.root_path
 			path = BSNS.get_config(:content_path) || 'content'
-			content_path.gsub(/\/$/, '')+'/'
+			path.gsub(/\/$/, '')+'/'
 		end
 
 		def self.relative_path
