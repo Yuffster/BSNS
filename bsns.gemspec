@@ -1,7 +1,8 @@
 Gem::Specification.new do |s|
 
 	s.name        = "bsns"
-	s.version     = "0.3.2"
+	s.version     = "0.3.3"
+	s.license     = 'MIT'
 	s.author      = "Michelle Steigerwalt"
 	s.email       = "msteigerwalt@gmail.com"
 	s.homepage    = "http://github.com/Yuffster/bsns"
