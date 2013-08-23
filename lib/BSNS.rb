@@ -7,11 +7,12 @@ module BSNS
 	def has_many model, opts = {}
 		field = opts[:as] || model.to_s.downcase.pluralize
 		with  = opts[:with] || nil
+		embed = opts[:embedded] || false
 		model = model.to_s.singularize
 		class_eval do 
 			define_method field do
 				fields = instance_variable_get "@#{field}"
-				collection_from_array fields, model, with
+				collection_from_array fields, model, opts
 			end
 		end
 	end
@@ -122,17 +123,23 @@ module BSNS
 			get_v(:data)[f.to_s]
 		end
 
-		def collection_from_array arr, model, extra_key = nil
-			# Return an array of all the references for a thing.
-			arr.map do |d| 
-				if d.instance_of? Hash
+		# Return an array of all the references for a thing.
+		def collection_from_array arr, model, opts
+			extra_key = opts[:with]
+			arr.map do |d|
+				if d.instance_of?(Hash) && !opts[:embedded]
 					# Normalize {:id => :linking_value} to [:id, :linking_value]
 					id    = d.keys[0]
 					value = d[id]
 					d     = [id, value]
 				end
-				id  = d.instance_of?(Array) ? d[0] : d
-				obj = model.to_s.capitalize.constantize.load id
+				klass = obj = model.to_s.capitalize.constantize
+				if opts[:embedded]
+					obj = klass.new d
+				else
+					id  = d.instance_of?(Array) ? d[0] : d
+					obj = klass.load id
+				end
 				obj.define_linking_field extra_key, d[1] if extra_key
 				obj
 			end

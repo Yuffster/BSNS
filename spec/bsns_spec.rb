@@ -29,6 +29,14 @@ class Fizzle < BSNS::Base
 
 	has_many :fizzles
 
+	has_many :cats, :embedded => true
+
+end
+
+class Cat < BSNS::Base
+
+	attr_accessor :thing
+
 end
 
 describe BSNS do
@@ -109,6 +117,13 @@ describe BSNS do
 	it "should allow override of preloaded defaults" do
 		wuzz = Wizzle.load 'wuzzy'
 		wuzz.species.should == "horse"
+	end
+
+	it "should allow for embedded collections" do
+		fazz = Fizzle.load 'fazz'
+		fazz.cats.length.should   == 2
+		fazz.cats[0].thing.should == 'whiskers'
+		fazz.cats[1].thing.should == 'hats'
 	end
 
 end
