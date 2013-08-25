@@ -26,8 +26,10 @@ module BSNS
 				if opts[:embedded]
 					obj = klass.new data
 				else
-					if data.type_of? Hash
+					if data.is_a? Hash
 						obj = klass.load data[0]
+					else
+						obj = klass.load data
 					end
 				end
 			end
