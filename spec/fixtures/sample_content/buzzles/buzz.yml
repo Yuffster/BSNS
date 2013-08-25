@@ -11,3 +11,15 @@ enemies:
   fuzz: Got all over the rest of the clothes in the dryer.
 opinions:
   - fazz: "Hasn't done anything particularly annoying, yet."
+cat:
+  thing: 'tiedye shirts'
+embedded_fizzles:
+  -
+    name: "Embedded Fizzle"
+    cats:
+      - 
+        thing: 'poops a lot'
+      -
+        thing: 'sharp claws'
+wizzle:
+  fizzle: 'fuzz'

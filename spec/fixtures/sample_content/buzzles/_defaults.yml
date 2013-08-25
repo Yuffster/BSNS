@@ -1,1 +1,4 @@
 alignment: lawful neutral
+weakness:
+  type: bullets
+  effect: this kills the hero
