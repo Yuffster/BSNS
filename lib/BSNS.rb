@@ -11,8 +11,25 @@ module BSNS
 		model = model.to_s.singularize
 		class_eval do 
 			define_method field do
-				fields = instance_variable_get "@#{field}"
-				collection_from_array fields, model, opts
+				collection_from_array instance_variable_get("@#{field}"), model, opts
+			end
+		end
+	end
+
+	def has_one model, opts = {}
+		model = model.to_s
+		field = opts[:as] || model.downcase
+		class_eval do
+			define_method field do
+				klass = model.capitalize.constantize
+				data  = instance_variable_get "@#{field}"
+				if opts[:embedded]
+					obj = klass.new data
+				else
+					if data.type_of? Hash
+						obj = klass.load data[0]
+					end
+				end
 			end
 		end
 	end
@@ -125,24 +142,26 @@ module BSNS
 
 		# Return an array of all the references for a thing.
 		def collection_from_array arr, model, opts
+			arr.map { |d| obj_from_dataset d, model, opts }
+		end
+
+		def obj_from_dataset d, model, opts={}
 			extra_key = opts[:with]
-			arr.map do |d|
-				if d.instance_of?(Hash) && !opts[:embedded]
-					# Normalize {:id => :linking_value} to [:id, :linking_value]
-					id    = d.keys[0]
-					value = d[id]
-					d     = [id, value]
-				end
-				klass = obj = model.to_s.capitalize.constantize
-				if opts[:embedded]
-					obj = klass.new d
-				else
-					id  = d.instance_of?(Array) ? d[0] : d
-					obj = klass.load id
-				end
-				obj.define_linking_field extra_key, d[1] if extra_key
-				obj
+			if d.instance_of?(Hash) && !opts[:embedded]
+				# Normalize {:id => :linking_value} to [:id, :linking_value]
+				id    = d.keys[0]
+				value = d[id]
+				d     = [id, value]
 			end
+			klass = obj = model.to_s.capitalize.constantize
+			if opts[:embedded]
+				obj = klass.new d
+			else
+				id  = d.instance_of?(Array) ? d[0] : d
+				obj = klass.load id
+			end
+			obj.define_linking_field extra_key, d[1] if extra_key
+			obj
 		end
 
 		def define_linking_field field, value
